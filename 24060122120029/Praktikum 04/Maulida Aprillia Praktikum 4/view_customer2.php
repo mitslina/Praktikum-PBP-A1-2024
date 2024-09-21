@@ -7,6 +7,14 @@
 
 
 // TODO 6 - Praktikum 3 : Buat sesi baru dan handle session untuk user
+session_start();
+require_once('./lib/db_login.php');
+
+// Cek apakah sudah login
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit;
+}
 
 include('./header.php') 
 ?>
