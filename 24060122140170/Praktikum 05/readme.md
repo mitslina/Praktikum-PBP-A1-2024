@@ -1,6 +1,1 @@
-KETENTUAN TUGAS!!!
-
-- Jangan Menghapus perintah TODO
-- Lengkapi semua kode yang ada pada folder Praktikum 05
-- Lengkapi tiap file dengan nama, nim, tanggal
-
+Pastikan Nama dan NIM Anda Benar!!! NAMA: "MOCHAMMAD QAYNAN MAHDAVIQYA" NIM: 24060122140170
