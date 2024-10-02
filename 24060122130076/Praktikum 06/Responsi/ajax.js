@@ -15,6 +15,7 @@ function getXMLHttpRequest() {
 
 function getCharacter() {
   var email = document.getElementById("email").value;
+  var xhr = new XMLHttpRequest();
 
   // Cek apakah email kosong
   if (email === "") {
@@ -23,16 +24,12 @@ function getCharacter() {
     return; // Hentikan eksekusi jika email kosong
   }
 
-  var xhr = new XMLHttpRequest();
   xhr.open("POST", "get_character.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       var response = xhr.responseText;
-
-      // Debugging: tampilkan respons untuk melihat apakah benar terkirim
-      console.log("Response dari server: " + response);
 
       // Cek apakah email sudah digunakan atau tersedia
       if (response.includes("email has been used")) {
@@ -45,13 +42,12 @@ function getCharacter() {
           "Email is available";
       } else if (response.includes("Email format is incorrect")) {
         document.getElementById("error_email").innerHTML =
-          "Email format is incorrect"; // Menampilkan kesalahan format
+          "Email format is incorrect";
         document.getElementById("success_email").innerHTML = "";
       }
     }
   };
 
-  // Kirim data ke server
   xhr.send("email=" + encodeURIComponent(email));
 }
 
@@ -59,13 +55,13 @@ function getCharacter() {
 function getClasses(race_id) {
   var xmlhttp = new XMLHttpRequest();
   var raceSelect = document.getElementById("race");
+  var url = race_id ? "get_classes.php?race_id=" + race_id : "get_races.php";
+
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       if (race_id) {
-        // Memuat daftar Class berdasarkan race_id
         document.getElementById("class").innerHTML = this.responseText;
       } else {
-        // Memuat daftar Race jika race_id tidak ada
         raceSelect.innerHTML = this.responseText;
         if (raceSelect.options.length > 0) {
           getClasses(raceSelect.options[0].value);
@@ -76,8 +72,6 @@ function getClasses(race_id) {
     }
   };
 
-  // Tentukan URL berdasarkan apakah race_id ada atau tidak
-  var url = race_id ? "get_classes.php?race_id=" + race_id : "get_races.php";
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
 }
