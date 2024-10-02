@@ -1,0 +1,92 @@
+<?php 
+// Nama         : Adzkiya Qarina Salsabila
+// NIM          : 24060122140138
+// Tanggal      : 17-09-2024
+// File         : show_cart.php
+// Deskripsi    : Untuk menambahkan item ke shopping cart dan menampilkan isi shopping cart
+
+// TODO 1: Buat sebuah sesi baru
+session_start();
+
+if (!isset($_SESSION['username'])) {
+  header('Location: ./login.php');
+  exit;
+}
+
+error_reporting(0);
+
+// TODO 2: Dapatkan id dari url
+$id = $_GET['id'];
+if ($id != '') {
+    // TODO 3: Tuliskan session
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = array();
+    }
+    if (isset($_SESSION['cart'][$id])) {
+        $_SESSION['cart'][$id]++;
+    } else {
+        $_SESSION['cart'][$id] = 1;
+    }
+}
+?>
+<?php include('./header.php') ?>
+<br>
+<div class="card mt-4">
+  <div class="card-header">Shopping Cart</div>
+  <div class="card-body">
+    <br>
+    <table class="table table-striped">
+      <tr>
+        <th>ISBN</th>
+        <th>Author</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Price * Qty</th>
+      </tr>
+      <?php
+        // TODO 4: Tuliskan dan eksekusi query
+        require_once('./lib/db_login.php');
+        $sum_qty = 0;
+        $sum_price = 0;
+
+        if (is_array($_SESSION['cart'])) {
+            foreach ($_SESSION['cart'] as $id => $qty) {
+            $query = "SELECT * FROM books WHERE isbn = '$id'";
+            $result = $db->query($query);
+            if (!$result) {
+                die("Could not query the database: <br />" . $db->error . '<br>Query: ' . $query);
+            }
+
+            while ($row = $result->fetch_object()) {
+                echo '<tr>';
+                echo '<td>' . $row->isbn . '</td>';
+                echo '<td>' . $row->author . '</td>';
+                echo '<td>' . $row->title . '</td>';
+                echo '<td>$' . $row->price . '</td>';
+                echo '<td>' . $qty . '</td>';
+                echo '<td>$' . $row->price * $qty . '</td>';
+                echo '</tr>';
+
+                $sum_qty = $sum_qty + $qty;
+                $sum_price = $sum_price + ($row->price * $qty);
+            } 
+        }
+        echo '<tr><td></td><td></td><td></td><td></td><td></td><td>$' . $sum_price . '</td>';
+        $result->free();
+        $db->close();
+      } else {
+        echo '<tr><td colspan="6" align="center">There is no item in shopping cart</td></tr>';
+      }
+      ?>   
+        </table>
+        Total items = <?php echo $sum_qty ?><br><br>
+
+        // TODO 5: Tambahkan tautan ke view_books.php
+        <a class="btn btn-primary">Continue Shopping</a>
+
+        // TODO 6: Tambahkan tautan ke delete_cart.php
+        <a class="btn btn-danger">Empty Cart</a>
+    </div>
+</div>
+<?php include('./footer.php') ?>
