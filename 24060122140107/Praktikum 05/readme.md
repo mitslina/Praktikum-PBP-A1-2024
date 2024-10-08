@@ -1,1 +1,6 @@
-Pastikan Nama dan NIM Anda Benar!!! NAMA: "SURYA FAJAR" NIM: 24060122140107 
+KETENTUAN TUGAS!!!
+
+- Jangan Menghapus perintah TODO
+- Lengkapi semua kode yang ada pada folder Praktikum 05
+- Lengkapi tiap file dengan nama, nim, tanggal
+
