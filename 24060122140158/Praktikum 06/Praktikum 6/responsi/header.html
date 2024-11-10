@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+  <title>Create a New Character</title>
+  <script type="text/javascript" src="ajax.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    //Nama : Naufal Alwi Ramadhani
+    //NIM : 24060122140154
+    //Kelas : A2
+
+      $(document).ready(function() {
+          $('#race').change(function() {
+              var race_id = $(this).val();
+              if (race_id) {
+                  $.ajax({
+                      type: 'POST',
+                      url: 'character_registration.php', // URL untuk memanggil AJAX
+                      data: { get_classes: true, race_id: race_id },
+                      dataType: 'json',
+                      success: function(classes) {
+                          $('#class').empty(); // Kosongkan dropdown class
+                          $('#class').append('<option value="">Select Class</option>'); // Tambahkan option default
+                          $.each(classes, function(index, classObj) {
+                              $('#class').append('<option value="' + classObj.class_id + '">' + classObj.class_name + '</option>');
+                          });
+                      }
+                  });
+              } else {
+                  $('#class').empty();
+                  $('#class').append('<option value="">Select Class</option>');
+              }
+          });
+      });
+  </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#email').on('input', function() {
+        var email = $(this).val();
+
+        // Jika email tidak kosong, lakukan pengecekan
+        if (email !== '') {
+            $.ajax({
+                url: 'get_character.php',
+                type: 'POST',
+                data: { email: email },
+                success: function(response) {
+                    // Menampilkan hasil cek email di dalam div email-status
+                    if (response === 'taken') {
+                        $('#email-status').html('<span style="color: red;">Email sudah terdaftar</span>');
+                    } else if (response === 'available') {
+                        $('#email-status').html('<span style="color: green;">Email available</span>');
+                    }
+                }
+            });
+        } else {
+            // Kosongkan pesan jika email dikosongkan
+            $('#email-status').html('');
+        }
+    });
+});
+</script>
+
+
+</head>
+
+<body style="max-width: 1000px; margin: auto; padding: 40px">
